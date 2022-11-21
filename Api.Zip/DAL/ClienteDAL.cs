@@ -54,8 +54,8 @@ namespace Api.Zip.DAL
 
         public void Insert(Cliente cli)
         {
-            var sql = "Insert Into CLIENTE(NOME, RG, FONE, ATIVO, CEP, ENDERECO, COMPLEMENTO, CPF, EMAIL, BAIRRO, UF, CIDADE, NumeroDaCasa, TIPO)" +
-                           "Values (@NOME, @RG, @FONE, @ATIVO, @CEP, @ENDERECO, @COMPLEMENTO, @CPF, @EMAIL, @BAIRRO, @UF, @CIDADE, @NumeroDaCasa, @TIPO)";
+            var sql = "Insert Into CLIENTE(NOME, RG, FONE1, ATIVO, CEP, ENDERECO, COMPLEMENTO, CPF, EMAIL, BAIRRO, UF, CIDADE, NumeroDaCasa, TIPO)" +
+                           "Values (@NOME, @RG, @FONE1, @ATIVO, @CEP, @ENDERECO, @COMPLEMENTO, @CPF, @EMAIL, @BAIRRO, @UF, @CIDADE, @NumeroDaCasa, @TIPO)";
             using (var conn = new SqlConnection(Strings.Conexao))
             {
                 conn.Open();
@@ -64,7 +64,7 @@ namespace Api.Zip.DAL
                     {
                         NOME = cli.NOME,
                         RG = cli.RG,
-                        FONE = cli.FONE,
+                        FONE = cli.FONE1,
                         ATIVO = cli.ATIVO,
                         CEP = cli.CEP,
                         ENDERECO = cli.ENDERECO,
@@ -83,7 +83,7 @@ namespace Api.Zip.DAL
 
         public void Update(Cliente cli)
         {
-            var sql = "Update CLIENTE set NOME = @NOME, RG = @RG, FONE = @FONE, ATIVO = @ATIVO, CEP = @CEP, ENDERECO = @ENDERECO, COMPLEMENTO = @COMPLEMENTO, " +
+            var sql = "Update CLIENTE set NOME = @NOME, RG = @RG, FONE1 = @FONE1, ATIVO = @ATIVO, CEP = @CEP, ENDERECO = @ENDERECO, COMPLEMENTO = @COMPLEMENTO, " +
                       "CPF = @CPF, EMAIL = @EMAIL, BAIRRO = @BAIRRO, UF = @UF, CIDADE = @CIDADE, NumeroDaCasa = @NumeroDaCasa, TIPO = @TIPO " +
                       " where CODIGO = @Codigo";
             using (var conn = new SqlConnection(Strings.Conexao))
@@ -95,7 +95,7 @@ namespace Api.Zip.DAL
                         CODIGO = cli.CODIGO,
                         NOME = cli.NOME,
                         RG = cli.RG,
-                        FONE = cli.FONE,
+                        FONE = cli.FONE1,
                         ATIVO = cli.ATIVO,
                         CEP = cli.CEP,
                         ENDERECO = cli.ENDERECO,

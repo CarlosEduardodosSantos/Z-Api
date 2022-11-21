@@ -38,5 +38,6 @@ namespace Api.Zip.Models
         public int DEPTO { get; set; }
         public int SECAO { get; set; }
         public float VLVENDA2 { get; set; }
+        public int QtdeP { get; set; }
     }
 }

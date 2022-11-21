@@ -10,8 +10,8 @@ namespace Api.Zip.Models
         public int CODIGO { get; set; }
         public string NOME { get; set; }
         public string RG { get; set; }
-        public string FONE { get; set; }
-        public bool ATIVO { get; set; }
+        public string FONE1 { get; set; }
+        public string ATIVO { get; set; }
         public string UF { get; set; }
         public string CIDADE { get; set; }
         public string CEP { get; set; }
