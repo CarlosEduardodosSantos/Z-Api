@@ -32,6 +32,29 @@ namespace Api.Zip.Controllers
             else { return null; }
         }
 
+        [HttpGet("obterPorGrupo/{grupo}")]
+        public RootResult ObterGrupoPorCodigo(int grupo)
+        {
+            if (Strings.Conexao != null)
+            {
+                var data = _prodDAL.ObterProdPorGrupo(grupo).ToList();
+                var totalPage = 1;
+                return new RootResult()
+                {
+                    TotalPage = totalPage,
+                    Results = data
+                };
+            }
+            else
+            {
+                return new RootResult()
+                {
+                    TotalPage = 0,
+                    Results = null
+                };
+            }
+        }
+
         [HttpGet("obterTodos")]
         public RootResult ObterTodos()
         {

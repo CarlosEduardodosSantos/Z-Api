@@ -35,6 +35,23 @@ namespace Api.Zip.DAL
 
         }
 
+        public List<PROD> ObterProdPorGrupo(int grupo)
+        {
+
+            using (var conn = new SqlConnection(
+                   Strings.Conexao))
+            {
+                conn.Open();
+                var prod = conn
+                    .Query<PROD>("select * from PROD where GRUPO = @grupo", new { grupo })
+                    .ToList();
+                conn.Close();
+
+                return prod;
+            }
+
+        }
+
         public List<PROD> ObterTodos()
         {
 
