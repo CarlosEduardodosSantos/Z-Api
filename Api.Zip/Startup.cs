@@ -42,6 +42,7 @@ namespace Api.Zip
             services.AddTransient<TAB_tipoDAL>();
             services.AddTransient<FarmaciaDAL>();
             services.AddTransient<UsuariosGestorDAL>();
+            services.AddTransient<GestorRestaurantesDAL>();
             services.AddTransient<SecaoDAL>();
             services.AddTransient<DeptoDAL>();
             services.AddControllers();
