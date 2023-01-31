@@ -111,5 +111,66 @@ namespace Api.Zip.Controllers
 
 
         }
+
+        [HttpDelete("deletarCategoria/{CategoriaId}")]
+        public object deletarCategoria(int CategoriaId)
+        {
+
+            try
+            {
+                _ResDAL.DeleteCategoria(CategoriaId);
+                return new
+                {
+                    errors = false,
+                    message = "Exclusão efetuada com sucesso."
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    errors = true,
+                    message = e.Message
+                };
+            }
+
+
+        }
+
+        [HttpGet("ObterCategoriaPorcategoriaId/{CategID}")]
+        public Categoria ObterCategPorCategID(int CategID)
+        {
+            if (Strings.Conexao != null)
+            {
+                var data = _ResDAL.ObterCategPorId(CategID).FirstOrDefault();
+                return data;
+            }
+            else { return null; }
+        }
+
+        [HttpGet("ObterCategorias/{restauranteid}")]
+        public RootResult ObterCategorias(int restauranteid)
+        {
+
+            if (Strings.Conexao != null)
+            {
+                var data = _ResDAL.ObterCategorias(restauranteid).ToList();
+                var totalPage = 1;
+                return new RootResult()
+                {
+                    TotalPage = totalPage,
+                    Results = data
+                };
+            }
+            else
+            {
+                return new RootResult()
+                {
+                    TotalPage = 0,
+                    Results = null
+                };
+            }
+
+        }
     }
 }

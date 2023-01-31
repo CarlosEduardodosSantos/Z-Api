@@ -54,27 +54,6 @@ namespace Api.Zip.DAL
             }
         }
 
-
-            public List<Categoria> ObterCategorias(int idRestaurante)
-        {
-
-            using (var conn = new SqlConnection(
-                   _configuration.GetConnectionString("VipFood")))
-            {
-                conn.Open();
-                var prop = conn
-                    .Query<Categoria>("select * from Categorias where restauranteId = @idRestaurante", new { idRestaurante })
-                    .ToList();
-                conn.Close();
-
-
-
-
-                return prop;
-            }
-
-        }
-
         public List<ProdutosRestaurante> ObterUserPorIdRestaurante(int idRestaurante)
         {
 
@@ -83,7 +62,7 @@ namespace Api.Zip.DAL
             {
                 conn.Open();
                 var prop = conn
-                    .Query<ProdutosRestaurante>("select * from Produtos where restauranteId = @idRestaurante order by nome", new { idRestaurante })
+                    .Query<ProdutosRestaurante>("select * from Produtos where Situacao = 1 and restauranteId = @idRestaurante or Situacao = 2 and restauranteId = @idRestaurante order by nome", new { idRestaurante })
                     .ToList();
                 conn.Close();
 
@@ -104,6 +83,52 @@ namespace Api.Zip.DAL
                     new
                     {
                         Produtoid = produtoid
+                    });
+                conn.Close();
+            }
+        }
+
+        public List<Categoria> ObterCategorias(int idRestaurante)
+        {
+
+            using (var conn = new SqlConnection(
+                   _configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                var prop = conn
+                    .Query<Categoria>("select * from Categorias where restauranteId = @idRestaurante order by descricao", new { idRestaurante })
+                    .ToList();
+                conn.Close();
+                return prop;
+            }
+
+        }
+
+        public List<Categoria> ObterCategPorId(int categoriaId)
+        {
+
+            using (var conn = new SqlConnection(
+                   _configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                var login = conn
+                    .Query<Categoria>("select * from Categorias where categoriaId = @categoriaId", new { categoriaId })
+                    .ToList();
+                conn.Close();
+
+                return login;
+            }
+        }
+
+        public void DeleteCategoria(int CategoriaId)
+        {
+            using (var conn = new SqlConnection(_configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                conn.Query("Delete from Categorias where categoriaId = @categoriaId",
+                    new
+                    {
+                        categoriaId = CategoriaId
                     });
                 conn.Close();
             }

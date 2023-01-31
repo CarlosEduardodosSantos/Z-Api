@@ -16,6 +16,16 @@ namespace Api.Zip.Models
         public Guid token { get; set; }
     }
 
+    public class CategoriasProdutos
+    {
+        public int categoriaId { get; set; }
+        public int restauranteId { get; set; }
+        public int referenciaId { get; set; }
+        public string descricao { get; set; }
+        public Guid restauranteToken { get; set; }
+        public int situacao { get; set; }
+    }
+
     public class ProdutosRestaurante
     {
         public int ProdutoId { get; set; }
