@@ -8,12 +8,24 @@ namespace Api.Zip.Models
     public class GestorRestaurante
     {
         public int restauranteId { get; set; }
-        public string nome { get;set; }
-        public string usuarioMaster { get; set; }
-        public string senhaMaster { get; set; }
-        public string grupo { get; set; }
-        public string imagem { get; set; }
         public Guid token { get; set; }
+        public string nome { get;set; }
+        public string senha { get; set; }
+        public decimal pedidoMinimo { get; set; }
+        public string fone { get; set; }
+        public string foneCelular { get; set; }
+        public string email { get; set; }
+        public string imagem { get; set; }
+        public bool aceitaRetira { get; set; }
+        public DateTime abreAs { get; set; }
+        public DateTime fechaAs { get; set; }
+        public string cep { get; set; }
+        public string uf { get; set; }
+        public string cidade { get; set; }
+        public string bairro { get; set; }
+        public string logradouro { get; set; }
+        public string numero { get; set; }
+        public string tempoEntrega { get; set; }
     }
 
     public class CategoriasProdutos

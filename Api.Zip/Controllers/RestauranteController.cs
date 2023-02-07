@@ -18,6 +18,10 @@ namespace Api.Zip.Controllers
             _ResDAL = ResDAL;
         }
 
+        //
+        /// Produtos
+        //
+
         [HttpGet("obterProdPorGuid/{Guid}")]
         public ProdutosRestaurante ObterProdPorGuid(string Guid)
         {
@@ -27,39 +31,6 @@ namespace Api.Zip.Controllers
                 return data;
             }
             else { return null; }
-        }
-
-
-        [HttpGet("obterRestauranteGestorByNomeSenha/{nome}/{Senha}")]
-        public GestorRestaurante ObterUsuarioPorNomeSenha(string nome, string Senha)
-        {
-            var data = _ResDAL.ObterUserPorNomeSenha(nome, Senha).FirstOrDefault();
-            return data;
-
-        }
-
-        [HttpGet("ObterCategoriasByRestauranteID/{RestauranteID}")]
-        public RootResult ObterCategoriasPorRestauranteID(int RestauranteID)
-        {
-            if (Strings.Conexao != null)
-            {
-                var data = _ResDAL.ObterCategorias(RestauranteID).ToList();
-                var totalPage = 1;
-                return new RootResult()
-                {
-                    TotalPage = totalPage,
-                    Results = data
-                };
-            }
-            else
-            {
-                return new RootResult()
-                {
-                    TotalPage = 0,
-                    Results = null
-                };
-            }
-
         }
 
         [HttpGet("obterPrdutos/{restauranteid}")]
@@ -112,28 +83,31 @@ namespace Api.Zip.Controllers
 
         }
 
-        [HttpDelete("deletarCategoria/{CategoriaId}")]
-        public object deletarCategoria(int CategoriaId)
+        //
+        /// Categorias
+        //
+
+        [HttpGet("ObterCategoriasByRestauranteID/{RestauranteID}")]
+        public RootResult ObterCategoriasPorRestauranteID(int RestauranteID)
         {
-
-            try
+            if (Strings.Conexao != null)
             {
-                _ResDAL.DeleteCategoria(CategoriaId);
-                return new
+                var data = _ResDAL.ObterCategorias(RestauranteID).ToList();
+                var totalPage = 1;
+                return new RootResult()
                 {
-                    errors = false,
-                    message = "Exclusão efetuada com sucesso."
+                    TotalPage = totalPage,
+                    Results = data
                 };
             }
-            catch (Exception e)
+            else
             {
-                return new
+                return new RootResult()
                 {
-                    errors = true,
-                    message = e.Message
+                    TotalPage = 0,
+                    Results = null
                 };
             }
-
 
         }
 
@@ -171,6 +145,74 @@ namespace Api.Zip.Controllers
                 };
             }
 
+        }
+
+        [HttpDelete("deletarCategoria/{CategoriaId}")]
+        public object deletarCategoria(int CategoriaId)
+        {
+
+            try
+            {
+                _ResDAL.DeleteCategoria(CategoriaId);
+                return new
+                {
+                    errors = false,
+                    message = "Exclusão efetuada com sucesso."
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    errors = true,
+                    message = e.Message
+                };
+            }
+
+
+        }
+
+        //
+        /// Restaurante
+        //
+
+        [HttpGet("obterRestauranteGestorByCnpjSenha/{cnpj}/{Senha}")]
+        public GestorRestaurante ObterUsuarioPorNomeSenha(string cnpj, string Senha)
+        {
+            var data = _ResDAL.ObterUserPorCnpjSenha(cnpj, Senha).FirstOrDefault();
+            return data;
+
+        }
+
+        [HttpPut("alterarRestaurante")]
+        public object Alterar([FromBody] GestorRestaurante Restaurante)
+        {
+            if (Strings.Conexao != null)
+            {
+                try
+                {
+                    _ResDAL.UpdateRestaurante(Restaurante);
+                    return new
+                    {
+                        errors = false,
+                        message = "Cadastro atualizado com sucesso."
+                    };
+                }
+
+                catch (Exception e)
+                {
+                    return new
+                    {
+                        errors = true,
+                        message = e.Message
+                    };
+                }
+            }
+
+            else
+            {
+                return new { errors = true, message = "Connection String não encontrada!" };
+            }
         }
     }
 }

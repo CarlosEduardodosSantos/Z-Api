@@ -18,25 +18,9 @@ namespace Api.Zip.DAL
             _configuration = configuration;
         }
 
-        public List<GestorRestaurante> ObterUserPorNomeSenha(string nome, string Senha)
-        {
-
-            using (var conn = new SqlConnection(
-                   _configuration.GetConnectionString("VipFood")))
-            {
-                conn.Open();
-                var prop = conn
-                    .Query<GestorRestaurante>("select * from Restaurantes where usuarioMaster = @nome and senhaMaster = @Senha", new { nome, Senha })
-                    .ToList();
-                conn.Close();
-
-
-
-
-                return prop;
-            }
-
-        }
+        //
+        /// Produtos
+        //
 
         public List<ProdutosRestaurante> ObterProdPorGuid(string produtoGuid)
         {
@@ -88,6 +72,10 @@ namespace Api.Zip.DAL
             }
         }
 
+        //
+        /// Categorias
+        //
+
         public List<Categoria> ObterCategorias(int idRestaurante)
         {
 
@@ -129,6 +117,61 @@ namespace Api.Zip.DAL
                     new
                     {
                         categoriaId = CategoriaId
+                    });
+                conn.Close();
+            }
+        }
+
+        //
+        /// Restaurante
+        //
+
+        public List<GestorRestaurante> ObterUserPorCnpjSenha(string cnpj, string Senha)
+        {
+
+            using (var conn = new SqlConnection(
+                   _configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                var prop = conn
+                    .Query<GestorRestaurante>("select * from Restaurantes where cnpj = @cnpj and Senha = @Senha", new { cnpj, Senha })
+                    .ToList();
+                conn.Close();
+
+
+
+
+                return prop;
+            }
+
+        }
+
+        public void UpdateRestaurante(GestorRestaurante restaurante)
+        {
+            var sql = "Update Restaurantes set senha = @senha, email =@email, pedidoMinimo =@pedidoMinimo, abreAs =@abreAs, " +
+                      "fechaAs = @fechaAs, fone =@fone, foneCelular =@foneCelular, aceitaRetira =@aceitaRetira, uf = @uf, " +
+                      "bairro =@bairro, logradouro =@logradouro, numero =@numero, tempoEntrega =@tempoEntrega" +
+                      " where token = @token";
+            using (var conn = new SqlConnection(_configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                conn.Query(sql,
+                    new
+                    {
+                        token = restaurante.token,
+                        senha = restaurante.senha,
+                        email = restaurante.email,
+                        pedidoMinimo = restaurante.pedidoMinimo,
+                        abreAs = restaurante.abreAs,
+                        fechaAs = restaurante.fechaAs,
+                        fone = restaurante.fone,
+                        foneCelular = restaurante.foneCelular,
+                        aceitaRetira = restaurante.aceitaRetira,
+                        uf = restaurante.uf,
+                        bairro = restaurante.bairro,
+                        logradouro = restaurante.logradouro,
+                        numero = restaurante.numero,
+                        tempoEntrega = restaurante.tempoEntrega
                     });
                 conn.Close();
             }
