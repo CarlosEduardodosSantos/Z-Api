@@ -19,6 +19,76 @@ namespace Api.Zip.Controllers
         }
 
         //
+        /// Tipos
+        //
+
+        [HttpGet("obteTiposByTipoId/{produtosOpcaoTipoId}")]
+        public RootResult ObterTiposByGestor(int produtosOpcaoTipoId)
+        {
+            var data = _ResDAL.ObterTiposPorprodutosOpcaoTipoId(produtosOpcaoTipoId).ToList();
+            return new RootResult()
+            {
+                TotalPage = 1,
+                Results = data
+            };
+        }
+
+        [HttpGet("ObterProdutosOpcaoGuid/{ProdutosOpcaoGuid}")]
+        public produtoOpcao ObterProdutosOpcaoGuid(string ProdutosOpcaoGuid)
+        {
+            var data = _ResDAL.ObterProdOpcaoPorGuid(ProdutosOpcaoGuid).FirstOrDefault();
+            return data;
+        }
+
+        [HttpDelete("DeletarTipos/{ProdutosOpcaoTipoId}")]
+        public object DeleteTipos(int ProdutosOpcaoTipoId)
+        {
+
+            try
+            {
+                _ResDAL.DeleteTipos(ProdutosOpcaoTipoId);
+                return new
+                {
+                    errors = false,
+                    message = "Exclusão efetuada com sucesso."
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    errors = true,
+                    message = e.Message
+                };
+            }
+        }
+
+        [HttpDelete("DeletarRelacao/{produtosOpcaoId}")]
+        public object DeleteRelacao(Guid produtosOpcaoId)
+        {
+
+            try
+            {
+                _ResDAL.DeleteRelacao(produtosOpcaoId);
+                return new
+                {
+                    errors = false,
+                    message = "Exclusão efetuada com sucesso."
+                };
+            }
+            catch (Exception e)
+            {
+                return new
+                {
+                    errors = true,
+                    message = e.Message
+                };
+            }
+
+
+        }
+
+        //
         /// Produtos
         //
 

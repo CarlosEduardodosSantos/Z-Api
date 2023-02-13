@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Api.Zip.DAL
@@ -17,6 +18,95 @@ namespace Api.Zip.DAL
         {
             _configuration = configuration;
         }
+
+        //
+        /// Tipos
+        //
+
+        public IEnumerable<ProdTiposGestor> ObterTiposPorprodutosOpcaoTipoId(int produtosOpcaoTipoId)
+        {
+
+            using (var conn = new SqlConnection(
+                   _configuration.GetConnectionString("VipFood")))
+            {
+                var sqlTp1 = new StringBuilder();
+                sqlTp1.AppendLine("Select ProdutosOpcaoTipos.*, ProdutosOpcoes.* From ProdutosOpcaoTipos");
+                sqlTp1.AppendLine("Left Join ProdutosOpcoes On ProdutosOpcaoTipos.ProdutosOpcaoTipoId = ProdutosOpcoes.ProdutosOpcaoTipoId");
+                sqlTp1.AppendLine("Where ProdutosOpcaoTipos.produtosOpcaoTipoId = @produtosOpcaoTipoId");
+                conn.Open();
+
+                var lookup = new Dictionary<int, ProdTiposGestor>();
+                conn.Query<ProdTiposGestor, produtoOpcao, ProdTiposGestor>(sqlTp1.ToString(),
+                    (p1, p2) =>
+                    {
+                        ProdTiposGestor shop;
+                        if (!lookup.TryGetValue(p1.ProdutosOpcaoTipoId, out shop))
+                        {
+                            lookup.Add(p1.ProdutosOpcaoTipoId, shop = p1);
+                        }
+
+
+                        if (shop.ProdutoOpcaos == null)
+                            shop.ProdutoOpcaos = new List<produtoOpcao>();
+                        if (p2 != null)
+                            shop.ProdutoOpcaos.Add(p2);
+
+                        return shop;
+
+                    }, new { produtosOpcaoTipoId } , splitOn: "ProdutosOpcaoTipoId, ProdutosOpcaoId").AsQueryable();
+                var resultList = lookup.Values;
+
+                conn.Close();
+
+                return resultList;
+            }
+        }
+
+        public List<produtoOpcao> ObterProdOpcaoPorGuid(string ProdutosOpcaoGuid)
+        {
+
+            using (var conn = new SqlConnection(
+                   _configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                var login = conn
+                    .Query<produtoOpcao>("select * from ProdutosOpcoes where ProdutosOpcaoId = @ProdutosOpcaoGuid", new { ProdutosOpcaoGuid })
+                    .ToList();
+                conn.Close();
+
+                return login;
+            }
+        }
+
+        public void DeleteTipos(int ProdutosOpcaoTipoId)
+        {
+            using (var conn = new SqlConnection(_configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                conn.Query("delete from ProdutosOpcoes where produtosOpcaoTipoId = @produtosOpcaoTipoId " +
+                           "delete from ProdutosOpcaoTipos where produtosOpcaoTipoId = @produtosOpcaoTipoId",
+                    new
+                    {
+                        produtosOpcaoTipoId = ProdutosOpcaoTipoId
+                    });
+                conn.Close();
+            }
+        }
+
+        public void DeleteRelacao(Guid produtosOpcaoId)
+        {
+            using (var conn = new SqlConnection(_configuration.GetConnectionString("VipFood")))
+            {
+                conn.Open();
+                conn.Query("Delete from ProdutosOpcaoTipoRelacao where ProdutosOpcaoId = @ProdutosOpcaoId",
+                    new
+                    {
+                        ProdutosOpcaoId = produtosOpcaoId
+                    });
+                conn.Close();
+            }
+        }
+
 
         //
         /// Produtos
